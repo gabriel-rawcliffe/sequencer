@@ -128,7 +128,7 @@ export default function Sequencer() {
 
   function handlePlay() {
     // Dispose of previous loop to prevent multiple loops from running
-    mainLoop.dispose()
+    // mainLoop.dispose()
     mainLoop.start()
     // Resume audio context on user interaction otherwise audio will not play
     Tone.context.resume()
@@ -140,11 +140,11 @@ export default function Sequencer() {
     // Dispose of previous loop to prevent multiple loops from running
     // mainLoop.dispose()
     mainLoop.stop()
-    mainLoop.dispose()
+
     // Resume audio context on user interaction otherwise audio will not play
     // Tone.context.resume()
     setIsPlaying(false)
-    drumPart.stopAll()
+    // drumPart.stopAll()
     Tone.Transport.pause()
   }
 
