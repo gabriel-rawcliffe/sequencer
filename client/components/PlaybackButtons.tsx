@@ -42,7 +42,9 @@ export const PauseButton = (props: {
 }
 
 // Stop
-export const StopButton = () => {
+export const StopButton = (props: {
+  onClick: MouseEventHandler<HTMLButtonElement> | undefined
+}) => {
   return (
     <IconButton
       variant="outline"
@@ -50,6 +52,7 @@ export const StopButton = () => {
       aria-label="Stop Video"
       fontSize="20px"
       icon={<AiOutlineStop />}
+      onClick={props.onClick}
     />
   )
 }

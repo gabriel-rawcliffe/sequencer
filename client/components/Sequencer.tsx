@@ -136,17 +136,17 @@ export default function Sequencer() {
     Tone.Transport.start()
   }
 
-  function handlePause() {
-    // Dispose of previous loop to prevent multiple loops from running
-    // mainLoop.dispose()
-    mainLoop.stop()
+  // function handlePause() {
+  //   // Dispose of previous loop to prevent multiple loops from running
+  //   // mainLoop.dispose()
+  //   mainLoop.stop()
 
-    // Resume audio context on user interaction otherwise audio will not play
-    // Tone.context.resume()
-    setIsPlaying(false)
-    // drumPart.stopAll()
-    Tone.Transport.pause()
-  }
+  //   // Resume audio context on user interaction otherwise audio will not play
+  //   // Tone.context.resume()
+  //   setIsPlaying(false)
+  //   // drumPart.stopAll()
+  //   Tone.Transport.pause()
+  // }
 
   // Function to toggle laser state
   const toggleLaser = () => {
@@ -157,6 +157,15 @@ export default function Sequencer() {
   const handleTempoChange = (newTempo: number) => {
     mainLoop.dispose()
     setTempo(newTempo)
+  }
+
+  const handleStop = () => {
+    setIsPlaying(false)
+    mainLoop.stop()
+    drumPart.stopAll()
+    Tone.Transport.cancel()
+    mainLoop.dispose()
+    currentStep = 0
   }
 
   const handleReset = () => {
@@ -189,7 +198,7 @@ export default function Sequencer() {
       <Center>
         <div className="button-container">
           {isPlaying ? (
-            <Buttons.PauseButton onClick={handlePause} />
+            <Buttons.StopButton onClick={handleStop} />
           ) : (
             <Buttons.PlayButton onClick={handlePlay} />
           )}
