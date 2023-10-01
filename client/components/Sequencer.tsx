@@ -10,7 +10,7 @@ import TempoSlider from './TempoSlider'
 import BeatSelect from './BeatSelect'
 import SaveBeat from './SaveBeat'
 import { getBeatByName } from '../apis/beats'
-import { CellState, SelectedBeat } from '../../models/beats'
+import { CellState } from '../../models/beats'
 import { Box, Center } from '@chakra-ui/react'
 
 const TRACK_COUNT = 7
@@ -76,8 +76,6 @@ export default function Sequencer() {
 
   // let currentStep = 0
 
-  Tone.Transport.bpm.value = tempo
-
   useEffect(() => {
     mainLoop.callback = (time) => {
       for (let track = 0; track < trackNumber.length; track++) {
@@ -103,14 +101,16 @@ export default function Sequencer() {
         }
       }
       currentStep < STEP_COUNT - 1 ? currentStep++ : (currentStep = 0)
+      console.log(time)
     }
 
     // Start this outside of the play/pause function otherwise it will start another loop
 
     mainLoop.interval = '16n'
+    console.log('useEffect change')
 
     // mainLoop.start()
-  }, [reset])
+  }, [reset, isPlaying])
 
   // startTransportHandler = () => {
   //   Transport.start("+.2");
@@ -129,10 +129,15 @@ export default function Sequencer() {
   function handlePlay() {
     // Dispose of previous loop to prevent multiple loops from running
     // mainLoop.dispose()
+    mainLoop.dispose()
+    Tone.Transport.cancel()
+    setIsPlaying(true)
+
+    Tone.Transport.bpm.value = tempo
     mainLoop.start()
     // Resume audio context on user interaction otherwise audio will not play
     Tone.context.resume()
-    setIsPlaying(true)
+
     Tone.Transport.start()
   }
 
@@ -155,16 +160,19 @@ export default function Sequencer() {
 
   // Set BPM to match tempo slider
   const handleTempoChange = (newTempo: number) => {
-    mainLoop.dispose()
     setTempo(newTempo)
+
+    mainLoop.dispose()
+    Tone.Transport.cancel()
   }
 
   const handleStop = () => {
     setIsPlaying(false)
     mainLoop.stop()
     drumPart.stopAll()
-    Tone.Transport.cancel()
     mainLoop.dispose()
+    Tone.Transport.cancel()
+
     currentStep = 0
   }
 
